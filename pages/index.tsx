@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 
 const Home: NextPage = () => {
   return (
-    <div className="bg-slate-400 py-20 px-20 grid gap-5">
+    <div className="bg-slate-400 py-20 px-20 grid gap-5 min-h-screen">
       <div className="bg-white p-7 rounded-3xl shadow-xl">
         <span className="font-semibold text-3xl">Select Item</span>
         <div className="flex justify-between my-2">
@@ -43,8 +43,42 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
-      <div className="bg-white p-10 rounded-3xl shadow-xl"></div>
-      <div className="bg-white p-10 rounded-3xl shadow-xl"></div>
+      <div className="bg-white p-10 rounded-3xl shadow-xl">
+        <div className="flex justify-between items-center mb-5">
+          <span>←</span>
+          <div className="space-x-3">
+            <span>⭐️ 4.9</span>
+            <span className="p-2 rounded-md shadow-xl">❤️</span>
+          </div>
+        </div>
+        <div className="bg-zinc-400 h-72 mb-5" />
+        <div className="flex flex-col">
+          <span className="font-medium mb-1 text-xl">Swoon Lounge</span>
+          <span className="text-xs text-gray-500">Chair</span>
+          <div className="flex justify-between items-center mt-3 mb-5">
+            <div>
+              <input type="radio" />
+              <input type="radio" />
+              <input type="radio" />
+            </div>
+            <div className="flex items-center space-x-4">
+              <button className="bg-blue-100 rounded-lg flex justify-center items-center aspect-square w-10 text-gray-500 text-2xl">
+                -
+              </button>
+              <span className="font-bold text-xl">1</span>
+              <button className="bg-blue-100 rounded-lg flex justify-center items-center aspect-square w-10 text-gray-500 text-2xl">
+                +
+              </button>
+            </div>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="font-medium text-3xl">$450</span>
+            <button className="bg-blue-500 text-white rounded-xl px-8 py-3 text-sm">
+              Add to cart
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
