@@ -3,21 +3,23 @@ import type { NextPage } from "next";
 const Home: NextPage = () => {
   return (
     <div className="grid min-h-screen gap-5 bg-slate-400 py-20 px-20 md:grid-cols-2 md:place-content-center xl:grid-cols-3">
-      <div className="flex flex-col justify-between rounded-3xl bg-white p-7 shadow-xl">
-        <span className="text-3xl font-semibold">Select Item</span>
+      <div className="flex flex-col justify-between rounded-3xl bg-white p-7 shadow-xl dark:bg-black">
+        <span className="text-3xl font-semibold dark:text-white">
+          Select Item
+        </span>
         <div className="my-2 flex justify-between">
-          <span className="text-gray-500">Grey Chair</span>
-          <span className="font-bold">$19</span>
+          <span className="text-gray-500 dark:text-gray-100">Grey Chair</span>
+          <span className="font-bold dark:text-white">$19</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-500">Tooly Table</span>
-          <span className="font-bold">$19</span>
+          <span className="text-gray-500 dark:text-gray-100">Tooly Table</span>
+          <span className="font-bold dark:text-white">$19</span>
         </div>
         <div className="mt-2 flex justify-between border-t-2 border-dashed pt-2">
-          <span>Total</span>
-          <span className="font-bold">$38</span>
+          <span className="dark:text-gray-100">Total</span>
+          <span className="font-bold dark:text-white">$38</span>
         </div>
-        <button className="mx-auto mt-5 w-1/2 rounded-xl bg-blue-500 p-3 text-center text-white transition-colors duration-200 hover:bg-blue-700 hover:text-black focus:bg-red-500 active:bg-yellow-500">
+        <button className="mx-auto mt-5 w-1/2 rounded-xl bg-blue-500 p-3 text-center text-white transition-colors duration-200 hover:bg-blue-700 hover:text-black focus:bg-red-500 active:bg-yellow-500 dark:border-2 dark:bg-black">
           Checkout
         </button>
       </div>
