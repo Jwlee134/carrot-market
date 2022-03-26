@@ -63,8 +63,8 @@ const ChatDetail: NextPage = () => {
             type="text"
             className="w-full rounded-full border-gray-300 pr-12 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500"
           />
-          <div className="absolute inset-y-0 right-0 flex cursor-pointer items-center py-1.5 pr-1.5">
-            <button className="flex h-full items-center rounded-full bg-orange-500 px-3 text-sm text-white hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+          <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
+            <button className="flex items-center rounded-full bg-orange-500 px-3 text-sm text-white hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
               &rarr;
             </button>
           </div>
