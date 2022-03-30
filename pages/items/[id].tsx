@@ -1,4 +1,6 @@
 import type { NextPage } from "next";
+import Link from "next/link";
+import Button from "../../components/Button";
 import Layout from "../../components/Layout";
 
 const ItemDetail: NextPage = () => {
@@ -7,15 +9,21 @@ const ItemDetail: NextPage = () => {
       <div className="px-4 py-10">
         <div className="mb-8">
           <div className="h-96 bg-slate-300" />
-          <div className="flex items-center space-x-3 border-t border-b py-3">
-            <div className="h-12 w-12 cursor-pointer rounded-full bg-slate-300" />
-            <div className="cursor-pointer">
-              <p className="text-sm font-medium text-gray-700">Steve Jebs</p>
-              <p className="text-xs font-medium text-gray-500">
-                View profile &rarr;
-              </p>
-            </div>
-          </div>
+          <Link href={`/profile`}>
+            <a>
+              <div className="flex items-center space-x-3 border-t border-b py-3">
+                <div className="h-12 w-12 cursor-pointer rounded-full bg-slate-300" />
+                <div className="cursor-pointer">
+                  <p className="text-sm font-medium text-gray-700">
+                    Steve Jebs
+                  </p>
+                  <p className="text-xs font-medium text-gray-500">
+                    View profile &rarr;
+                  </p>
+                </div>
+              </div>
+            </a>
+          </Link>
           <div className="mt-5">
             <h1 className="text-3xl font-bold text-gray-900">Galaxy S50</h1>
             <span className="mt-3 block text-3xl text-gray-900">$140</span>
@@ -30,9 +38,7 @@ const ItemDetail: NextPage = () => {
               the first motherfucker to get shot. You understand?
             </p>
             <div className="flex items-center justify-between space-x-2">
-              <button className="flex-grow rounded-md bg-orange-500 py-3 font-medium text-white hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
-                Talk to seller
-              </button>
+              <Button text="Talk to seller" large />
               <button className="flex items-center justify-center rounded-md p-3 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
                 <svg
                   className="h-6 w-6 "

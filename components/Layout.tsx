@@ -49,7 +49,14 @@ const Layout = ({ children, title, canGoBack, hasTabBar }: Props) => {
       {hasTabBar && (
         <nav className="fixed bottom-0 flex h-20 w-full max-w-lg items-center justify-between border-t bg-white text-xs text-gray-700">
           <Link href="/">
-            <a className="flex flex-grow flex-col items-center space-y-2">
+            <a
+              className={cls(
+                "flex flex-grow flex-col items-center space-y-2",
+                router.pathname === "/"
+                  ? "text-orange-500"
+                  : "transition-colors hover:text-gray-500"
+              )}
+            >
               <svg
                 className="h-6 w-6"
                 fill="none"
@@ -68,7 +75,14 @@ const Layout = ({ children, title, canGoBack, hasTabBar }: Props) => {
             </a>
           </Link>
           <Link href="/community">
-            <a className="flex flex-grow flex-col items-center space-y-2">
+            <a
+              className={cls(
+                "flex flex-grow flex-col items-center space-y-2",
+                router.pathname === "/community"
+                  ? "text-orange-500"
+                  : "transition-colors hover:text-gray-500"
+              )}
+            >
               <svg
                 className="h-6 w-6"
                 fill="none"
@@ -87,7 +101,14 @@ const Layout = ({ children, title, canGoBack, hasTabBar }: Props) => {
             </a>
           </Link>
           <Link href="/chats">
-            <a className="flex flex-grow flex-col items-center space-y-2">
+            <a
+              className={cls(
+                "flex flex-grow flex-col items-center space-y-2",
+                router.pathname === "/chats"
+                  ? "text-orange-500"
+                  : "transition-colors hover:text-gray-500"
+              )}
+            >
               <svg
                 className="h-6 w-6"
                 fill="none"
@@ -106,7 +127,14 @@ const Layout = ({ children, title, canGoBack, hasTabBar }: Props) => {
             </a>
           </Link>
           <Link href="/streams">
-            <a className="flex flex-grow flex-col items-center space-y-2">
+            <a
+              className={cls(
+                "flex flex-grow flex-col items-center space-y-2",
+                router.pathname === "/streams"
+                  ? "text-orange-500"
+                  : "transition-colors hover:text-gray-500"
+              )}
+            >
               <svg
                 className="h-6 w-6"
                 fill="none"
@@ -125,7 +153,14 @@ const Layout = ({ children, title, canGoBack, hasTabBar }: Props) => {
             </a>
           </Link>
           <Link href="/profile">
-            <a className="flex flex-grow flex-col items-center space-y-2">
+            <a
+              className={cls(
+                "flex flex-grow flex-col items-center space-y-2",
+                router.pathname === "/profile"
+                  ? "text-orange-500"
+                  : "transition-colors hover:text-gray-500"
+              )}
+            >
               <svg
                 className="h-6 w-6"
                 fill="none"
