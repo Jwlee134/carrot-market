@@ -3,12 +3,29 @@ import type { NextPage } from "next";
 import { cls } from "../libs/utils";
 import Button from "../components/Button";
 import Input from "../components/Input";
+import { useForm } from "react-hook-form";
+
+interface Form {
+  email?: string;
+  phone?: string;
+}
 
 const Enter: NextPage = () => {
+  const { register, handleSubmit, reset } = useForm<Form>();
   const [method, setMethod] = useState<"email" | "phone">("email");
 
-  const onEmailClick = () => setMethod("email");
-  const onPhoneClick = () => setMethod("phone");
+  const onEmailClick = () => {
+    reset();
+    setMethod("email");
+  };
+  const onPhoneClick = () => {
+    reset();
+    setMethod("phone");
+  };
+
+  const onValid = (data: Form) => {
+    console.log(data);
+  };
 
   return (
     <div className="mt-16 px-4">
@@ -41,14 +58,28 @@ const Enter: NextPage = () => {
             </button>
           </div>
         </div>
-        <form className="mt-8 flex flex-col space-y-6">
-          <Input
-            label={method === "email" ? "Email address" : "Phone number"}
-            name={method === "email" ? "email" : "phone"}
-            kind={method === "email" ? "text" : "phone"}
-            type={method === "email" ? "email" : "number"}
-            required
-          />
+        <form
+          onSubmit={handleSubmit(onValid)}
+          className="mt-8 flex flex-col space-y-6"
+        >
+          {method === "email" && (
+            <Input
+              register={register("email", { required: true })}
+              label="Email address"
+              name="email"
+              kind="text"
+              type="email"
+            />
+          )}
+          {method === "phone" && (
+            <Input
+              register={register("phone", { required: true })}
+              label="Phone number"
+              name="phone"
+              kind="phone"
+              type="number"
+            />
+          )}
           <Button
             text={
               method === "email" ? "Get login link" : "Get one-time password"

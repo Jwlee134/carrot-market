@@ -1,18 +1,21 @@
 import { InputHTMLAttributes } from "react";
+import type { UseFormRegisterReturn } from "react-hook-form";
 import Label from "./Label";
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   name: string;
   kind: "text" | "phone" | "price";
+  register: UseFormRegisterReturn;
 }
 
-const Input = ({ label, name, kind, ...rest }: Props) => {
+const Input = ({ label, name, kind, register, ...rest }: Props) => {
   return (
     <div className="space-y-1">
       <Label label={label} name={name} />
       {kind === "text" && (
         <input
+          {...register}
           id={name}
           className="w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500"
           type="text"
@@ -25,6 +28,7 @@ const Input = ({ label, name, kind, ...rest }: Props) => {
             +82
           </span>
           <input
+            {...register}
             id={name}
             className="w-full appearance-none rounded-md rounded-l-none border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500"
             type="number"
@@ -38,10 +42,12 @@ const Input = ({ label, name, kind, ...rest }: Props) => {
             <span className="text-sm text-gray-500">$</span>
           </div>
           <input
+            {...register}
             className="w-full appearance-none rounded-md border border-gray-300 px-3 py-2 pl-7 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500"
             id="price"
             type="text"
             placeholder="0.00"
+            {...rest}
           />
           <div className="absolute right-0 flex select-none items-center justify-center pr-3">
             <span className="text-sm text-gray-500">USD</span>
