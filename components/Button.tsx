@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes } from "react";
-import { cls } from "../libs/utils";
+import { cls } from "../libs/client/utils";
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
