@@ -1,4 +1,4 @@
-import { cls } from "../libs/client/utils";
+import { cls } from "@libs/client/utils";
 
 interface Props {
   text: string;

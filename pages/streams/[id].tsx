@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
-import ChatInput from "../../components/ChatInput";
-import Layout from "../../components/Layout";
-import Message from "../../components/Message";
+import ChatInput from "@components/ChatInput";
+import Layout from "@components/Layout";
+import Message from "@components/Message";
 
 const Stream: NextPage = () => {
   return (
