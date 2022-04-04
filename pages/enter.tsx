@@ -84,7 +84,11 @@ const Enter: NextPage = () => {
           )}
           <Button
             text={
-              method === "email" ? "Get login link" : "Get one-time password"
+              loading
+                ? "Loading"
+                : method === "email"
+                ? "Get login link"
+                : "Get one-time password"
             }
           />
         </form>
