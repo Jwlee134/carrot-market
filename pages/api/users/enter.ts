@@ -5,13 +5,18 @@ import { NextApiRequest, NextApiResponse } from "next";
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { phone, email } = req.body;
   const payload = phone ? { phone: +phone } : { email };
-  // where에서 찾고 있으면 update로 넘어가는데 nothing, 없으면 create
-  const user = await client.user.upsert({
-    where: { ...payload },
-    create: { ...payload, name: "Anonymous" },
-    update: {},
+  const token = await client.token.create({
+    data: {
+      user: {
+        connectOrCreate: {
+          where: payload,
+          create: { ...payload, name: "Anonymous" },
+        },
+      },
+      payload: "1234",
+    },
   });
-  res.status(200).json({ user });
+  res.status(200).json({ token });
 }
 
 export default withHandler("POST", handler);
