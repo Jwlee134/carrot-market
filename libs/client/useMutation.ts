@@ -10,7 +10,9 @@ interface UseMutationState<T, K> {
 
 type UseMutationResult<T, K> = [Trigger, UseMutationState<T, K>];
 
-const useMutation = <T = {}, K = {}>(url: string): UseMutationResult<T, K> => {
+const useMutation = <T = any, K = any>(
+  url: string
+): UseMutationResult<T, K> => {
   const [data, setData] = useState<T | undefined>(undefined);
   const [error, setError] = useState<K | undefined>(undefined);
   const [loading, setLoading] = useState(false);

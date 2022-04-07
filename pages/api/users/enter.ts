@@ -27,21 +27,21 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
     },
   });
   if (phone) {
-    const message = await twilioClient.messages.create({
+    /* const message = await twilioClient.messages.create({
       messagingServiceSid: process.env.TWILIO_MSID,
       to: process.env.MY_PHONE!,
       body: `Your login token is ${payload}.`,
     });
-    console.log(message);
+    console.log(message); */
   } else {
-    const email = await mail.send({
+    /* const email = await mail.send({
       from: "sorhd134@gmail.com",
       to: "sorhd134@gmail.com",
       subject: "Your Carrot Market Verification Email.",
       text: `Your token is ${payload}.`,
       html: `Your token is ${payload}.`,
     });
-    console.log(email);
+    console.log(email); */
   }
   res.status(200).json({ ok: true });
 }
