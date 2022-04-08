@@ -13,7 +13,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
     res.status(400).json({ ok: false });
     return;
   }
-  const user = phone ? { phone: +phone } : { email };
+  const user = phone ? { phone } : { email };
   const payload = new Date().valueOf().toString();
   const token = await client.token.create({
     data: {

@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { useForm } from "react-hook-form";
 import { cls } from "@libs/client/utils";
 import Button from "@components/Button";
 import Input from "@components/Input";
 import useMutation from "@libs/client/useMutation";
+import { User } from "@prisma/client";
+import { useRouter } from "next/router";
 
 interface Form {
   email?: string;
@@ -17,12 +19,13 @@ interface Response {
 }
 
 const Enter: NextPage = () => {
+  const router = useRouter();
   const [enter, { data, loading, error }] =
     useMutation<Response>("/users/enter");
   const [
     verifyToken,
     { data: tokenData, loading: tokenLoading, error: tokenError },
-  ] = useMutation<Response>("/users/verify");
+  ] = useMutation<Response & { user: User }>("/users/verify");
   const { register, handleSubmit, reset } = useForm<Form>();
   const [method, setMethod] = useState<"email" | "phone">("email");
 
@@ -43,6 +46,11 @@ const Enter: NextPage = () => {
     }
     enter(data);
   };
+
+  useEffect(() => {
+    if (!tokenData?.ok) return;
+    router.push("/");
+  }, [tokenData, router]);
 
   return (
     <div className="mt-16 px-4">
