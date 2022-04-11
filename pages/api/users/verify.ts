@@ -15,4 +15,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
   res.status(200).json({ ok: true });
 }
 
-export default withSession(withHandler("POST", handler));
+export default withSession(
+  withHandler({ method: "POST", handler, isPrivate: false })
+);

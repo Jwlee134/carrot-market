@@ -5,19 +5,31 @@ export interface Response {
   [key: string]: any;
 }
 
-export default function withHandler(
-  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
-  fn: (req: NextApiRequest, res: NextApiResponse) => Promise<any>
-) {
-  return async function (req: NextApiRequest, res: NextApiResponse) {
+interface Config {
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  handler: (
+    req: NextApiRequest,
+    res: NextApiResponse<Response>
+  ) => Promise<any>;
+  isPrivate?: boolean;
+}
+
+export default function withHandler({
+  method,
+  handler,
+  isPrivate = true,
+}: Config) {
+  return async function (req: NextApiRequest, res: NextApiResponse<Response>) {
     if (req.method !== method) {
-      res.status(405).end();
-      return;
+      return res.status(405).end();
+    }
+    if (isPrivate && !req.session.user) {
+      return res.status(401).json({ ok: false, user: null });
     }
     try {
-      await fn(req, res);
+      await handler(req, res);
     } catch (error) {
-      res.status(500).json({ error });
+      res.status(500).json({ ok: false, error });
     }
   };
 }

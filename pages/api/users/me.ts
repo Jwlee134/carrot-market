@@ -9,4 +9,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
   res.status(200).json({ ok: true, user });
 }
 
-export default withSession(withHandler("GET", handler));
+export default withSession(withHandler({ method: "GET", handler }));
