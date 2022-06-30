@@ -1,16 +1,19 @@
 import type { NextPage } from "next";
 import FloatingButton from "@components/FloatingButton";
-import Item from "@components/Item";
+import Product from "@components/Product";
 import Layout from "@components/Layout";
 import Head from "next/head";
 import useUser from "@libs/client/useUser";
 import useSWR from "swr";
-import { Product } from "@prisma/client";
-import ItemSkeleton from "@components/ItemSkeleton";
+import { Product as ProductType } from "@prisma/client";
+
+const isProduct = (item: ProductType | number): item is ProductType =>
+  (item as ProductType).id !== undefined;
 
 const Home: NextPage = () => {
   const { user, isLoading } = useUser();
-  const { data } = useSWR<{ ok: boolean; products: Product[] }>("/products");
+  const { data } =
+    useSWR<{ ok: boolean; products: ProductType[] }>("/products");
 
   return (
     <Layout title="홈" hasTabBar>
@@ -18,17 +21,13 @@ const Home: NextPage = () => {
         <title>홈</title>
       </Head>
       <div className="flex flex-col divide-y">
-        {data?.products
-          ? data.products.map((product) => (
-              <Item
-                key={product.id}
-                href={`/products/${product.id}`}
-                {...product}
-              />
-            ))
-          : Array(20)
-              .fill(1)
-              .map((_, i) => <ItemSkeleton key={i} />)}
+        {(data?.products ?? Array(20).fill(1)).map((item, i) => (
+          <Product
+            key={isProduct(item) ? item.id : i}
+            href={isProduct(item) ? `/products/${item.id}` : null}
+            {...(isProduct(item) ? item : null)}
+          />
+        ))}
         <FloatingButton href="/products/upload">
           <svg
             className="h-6 w-6"

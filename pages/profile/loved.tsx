@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import Item from "@components/Item";
+import Product from "@components/Product";
 import Layout from "@components/Layout";
 
 const Loved: NextPage = () => {
@@ -9,7 +9,7 @@ const Loved: NextPage = () => {
         {Array(10)
           .fill(1)
           .map((_, i) => (
-            <Item key={i} href={`/items/${i}`} />
+            <Product key={i} href={`/products/${i}`} />
           ))}
       </div>
     </Layout>

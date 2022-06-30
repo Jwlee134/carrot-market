@@ -6,13 +6,22 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import { Product, User } from "@prisma/client";
 import Skeleton from "@components/Skeleton";
+import RelatedProduct from "@components/RelatedProduct";
+
+interface ProductDetail {
+  ok: boolean;
+  product: Product & { user: { id: number; avatar: string; name: string } };
+  relatedProducts: Product[];
+}
+
+const isProduct = (item: Product | number): item is Product =>
+  (item as Product).id !== undefined;
 
 const ProductDetail: NextPage = () => {
   const { query } = useRouter();
-  const { data: { product } = {} } = useSWR<{
-    ok: boolean;
-    product: Product & { user: { id: number; avatar: string; name: string } };
-  }>(query.id ? `/products/${query.id}` : null);
+  const { data: { product, relatedProducts } = {} } = useSWR<ProductDetail>(
+    query.id ? `/products/${query.id}` : null
+  );
 
   return (
     <Layout canGoBack>
@@ -67,14 +76,14 @@ const ProductDetail: NextPage = () => {
           </div>
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Similar items</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Related Products</h2>
           <div className="mt-6 grid grid-cols-2 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((_, i) => (
-              <div key={i}>
-                <div className="mb-4 h-56 w-full bg-slate-300" />
-                <h3 className="-mb-1 text-gray-700">Galaxy S60</h3>
-                <span className="text-sm font-medium text-gray-900">$6</span>
-              </div>
+            {(relatedProducts ?? [1, 2, 3, 4]).map((item, i) => (
+              <RelatedProduct
+                key={isProduct(item) ? item.id : i}
+                href={isProduct(item) ? `/products/${item.id}` : null}
+                {...(isProduct(item) ? item : null)}
+              />
             ))}
           </div>
         </div>
