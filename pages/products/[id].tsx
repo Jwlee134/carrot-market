@@ -3,7 +3,7 @@ import Link from "next/link";
 import Button from "@components/Button";
 import Layout from "@components/Layout";
 
-const ItemDetail: NextPage = () => {
+const ProductDetail: NextPage = () => {
   return (
     <Layout canGoBack>
       <div className="px-4 py-10">
@@ -76,4 +76,4 @@ const ItemDetail: NextPage = () => {
   );
 };
 
-export default ItemDetail;
+export default ProductDetail;

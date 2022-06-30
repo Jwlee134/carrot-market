@@ -17,9 +17,9 @@ const Home: NextPage = () => {
         {Array(10)
           .fill(1)
           .map((_, i) => (
-            <Item key={i} href={`/items/${i}`} />
+            <Item key={i} href={`/products/${i}`} />
           ))}
-        <FloatingButton href="/items/upload">
+        <FloatingButton href="/products/upload">
           <svg
             className="h-6 w-6"
             xmlns="http://www.w3.org/2000/svg"
