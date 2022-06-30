@@ -2,40 +2,47 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import Button from "@components/Button";
 import Layout from "@components/Layout";
+import { useRouter } from "next/router";
+import useSWR from "swr";
+import { Product, User } from "@prisma/client";
+import Skeleton from "@components/Skeleton";
 
 const ProductDetail: NextPage = () => {
+  const { query } = useRouter();
+  const { data: { product } = {} } = useSWR<{
+    ok: boolean;
+    product: Product & { user: { id: number; avatar: string; name: string } };
+  }>(query.id ? `/products/${query.id}` : null);
+
   return (
     <Layout canGoBack>
       <div className="px-4 py-10">
         <div className="mb-8">
           <div className="h-96 bg-slate-300" />
-          <Link href={`/profile`}>
-            <a>
-              <div className="flex items-center space-x-3 border-t border-b py-3">
-                <div className="h-12 w-12 cursor-pointer rounded-full bg-slate-300" />
-                <div className="cursor-pointer">
-                  <p className="text-sm font-medium text-gray-700">
-                    Steve Jebs
-                  </p>
+          <div className="flex items-center space-x-3 border-t border-b py-3">
+            <div className="h-12 w-12 rounded-full bg-slate-300" />
+            <div>
+              <p className="text-sm font-medium text-gray-700">
+                {product?.user.name || <Skeleton />}
+              </p>{" "}
+              <Link href={`/users/profile/${product?.user.name}`}>
+                <a>
                   <p className="text-xs font-medium text-gray-500">
                     View profile &rarr;
                   </p>
-                </div>
-              </div>
-            </a>
-          </Link>
+                </a>
+              </Link>
+            </div>
+          </div>
           <div className="mt-5">
-            <h1 className="text-3xl font-bold text-gray-900">Galaxy S50</h1>
-            <span className="mt-3 block text-3xl text-gray-900">$140</span>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {product?.name || <Skeleton />}
+            </h1>
+            <span className="mt-3 block text-3xl text-gray-900">
+              {product?.price ? `$${product.price}` : <Skeleton />}
+            </span>
             <p className="my-6 text-base text-gray-700">
-              My money&apos;s in that office, right? If she start giving me some
-              bullshit about it ain&apos;t there, and we got to go someplace
-              else and get it, I&apos;m gonna shoot you in the head then and
-              there. Then I&apos;m gonna shoot that bitch in the kneecaps, find
-              out where my goddamn money is. She gonna tell me too. Hey, look at
-              me when I&apos;m talking to you, motherfucker. You listen: we go
-              in there, and that ni**a Winston or anybody else is in there, you
-              the first motherfucker to get shot. You understand?
+              {product?.description || <Skeleton count={5} />}
             </p>
             <div className="flex items-center justify-between space-x-2">
               <Button text="Talk to seller" large />

@@ -6,6 +6,7 @@ import Head from "next/head";
 import useUser from "@libs/client/useUser";
 import useSWR from "swr";
 import { Product } from "@prisma/client";
+import ItemSkeleton from "@components/ItemSkeleton";
 
 const Home: NextPage = () => {
   const { user, isLoading } = useUser();
@@ -17,13 +18,17 @@ const Home: NextPage = () => {
         <title>홈</title>
       </Head>
       <div className="flex flex-col divide-y">
-        {data?.products?.map((product) => (
-          <Item
-            key={product.id}
-            href={`/products/${product.id}`}
-            {...product}
-          />
-        ))}
+        {data?.products
+          ? data.products.map((product) => (
+              <Item
+                key={product.id}
+                href={`/products/${product.id}`}
+                {...product}
+              />
+            ))
+          : Array(20)
+              .fill(1)
+              .map((_, i) => <ItemSkeleton key={i} />)}
         <FloatingButton href="/products/upload">
           <svg
             className="h-6 w-6"
