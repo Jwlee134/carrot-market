@@ -4,9 +4,12 @@ import Item from "@components/Item";
 import Layout from "@components/Layout";
 import Head from "next/head";
 import useUser from "@libs/client/useUser";
+import useSWR from "swr";
+import { Product } from "@prisma/client";
 
 const Home: NextPage = () => {
   const { user, isLoading } = useUser();
+  const { data } = useSWR<{ ok: boolean; products: Product[] }>("/products");
 
   return (
     <Layout title="홈" hasTabBar>
@@ -14,11 +17,13 @@ const Home: NextPage = () => {
         <title>홈</title>
       </Head>
       <div className="flex flex-col divide-y">
-        {Array(10)
-          .fill(1)
-          .map((_, i) => (
-            <Item key={i} href={`/products/${i}`} />
-          ))}
+        {data?.products?.map((product) => (
+          <Item
+            key={product.id}
+            href={`/products/${product.id}`}
+            {...product}
+          />
+        ))}
         <FloatingButton href="/products/upload">
           <svg
             className="h-6 w-6"

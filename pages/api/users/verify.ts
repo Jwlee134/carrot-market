@@ -16,5 +16,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
 }
 
 export default withSession(
-  withHandler({ method: "POST", handler, isPrivate: false })
+  withHandler({ methods: ["POST"], handler, isPrivate: false })
 );

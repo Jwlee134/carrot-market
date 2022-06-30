@@ -5,7 +5,10 @@ import { SWRConfig } from "swr";
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <SWRConfig
-      value={{ fetcher: (url: string) => fetch(url).then((res) => res.json()) }}
+      value={{
+        fetcher: (url: string) =>
+          fetch(`/api/${url}`).then((res) => res.json()),
+      }}
     >
       <div className="mx-auto w-full max-w-lg">
         <Component {...pageProps} />

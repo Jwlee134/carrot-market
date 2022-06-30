@@ -1,22 +1,20 @@
+import { Product } from "@prisma/client";
 import Link from "next/link";
 
-interface Props {
+interface Props extends Product {
   href: string;
 }
 
-const Item = ({ href }: Props) => {
+const Item = ({ href, name, price }: Props) => {
   return (
     <Link href={href}>
       <a>
         <div className="flex cursor-pointer justify-between px-4 py-4">
           <div className="flex space-x-4">
             <div className="h-20 w-20 rounded-md bg-gray-400" />
-            <div className="flex flex-col pt-2">
-              <h3 className="text-sm font-medium text-gray-900">
-                New iPhone 14
-              </h3>
-              <span className="text-xs text-gray-500">Black</span>
-              <span className="mt-1 font-medium text-gray-900">$95</span>
+            <div className="flex flex-col justify-between pt-2">
+              <h3 className="text-sm font-medium text-gray-900">{name}</h3>
+              <span className="mt-1 font-medium text-gray-900">${price}</span>
             </div>
           </div>
           <div className="flex items-end justify-end space-x-2">

@@ -5,8 +5,10 @@ export interface Response {
   [key: string]: any;
 }
 
+type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
 interface Config {
-  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  methods: Method[];
   handler: (
     req: NextApiRequest,
     res: NextApiResponse<Response>
@@ -15,12 +17,12 @@ interface Config {
 }
 
 export default function withHandler({
-  method,
+  methods,
   handler,
   isPrivate = true,
 }: Config) {
   return async function (req: NextApiRequest, res: NextApiResponse<Response>) {
-    if (req.method !== method) {
+    if (req.method && !methods.includes(req.method as Method)) {
       return res.status(405).end();
     }
     if (isPrivate && !req.session.user) {
