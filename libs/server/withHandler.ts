@@ -29,6 +29,7 @@ export default function withHandler({
     try {
       await handler(req, res);
     } catch (error) {
+      console.log(error);
       res.status(500).json({ ok: false, error });
     }
   };
