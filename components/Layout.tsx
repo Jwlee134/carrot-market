@@ -26,7 +26,10 @@ const Layout = ({ children, title, canGoBack, hasTabBar }: Props) => {
         )}
       >
         {canGoBack && (
-          <button onClick={onBackButtonClick} className="text-gray-500">
+          <button
+            onClick={onBackButtonClick}
+            className="absolute text-gray-500"
+          >
             <svg
               className="h-6 w-6"
               fill="none"
@@ -43,7 +46,9 @@ const Layout = ({ children, title, canGoBack, hasTabBar }: Props) => {
             </svg>
           </button>
         )}
-        {title && <span>{title}</span>}
+        {title && (
+          <span className={cls(canGoBack ? "mx-auto" : "")}>{title}</span>
+        )}
       </header>
       <div className={cls("pt-14", hasTabBar ? "pb-20" : "")}>{children}</div>
       {hasTabBar && (
