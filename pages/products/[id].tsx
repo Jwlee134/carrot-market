@@ -10,9 +10,13 @@ import RelatedProduct from "@components/RelatedProduct";
 import useMutation from "@libs/client/useMutation";
 import { cls } from "@libs/client/utils";
 
+type ProductType = Product & {
+  user: { id: number; avatar: string; name: string };
+};
+
 interface ProductDetail {
   ok: boolean;
-  product: Product & { user: { id: number; avatar: string; name: string } };
+  product: ProductType;
   relatedProducts: Product[];
   isLiked: boolean;
 }
@@ -22,12 +26,15 @@ const isProduct = (item: Product | number): item is Product =>
 
 const ProductDetail: NextPage = () => {
   const { query } = useRouter();
-  const { data: { product, relatedProducts, isLiked } = {}, mutate } =
+  const { data: { ok, product, relatedProducts, isLiked } = {}, mutate } =
     useSWR<ProductDetail>(query.id ? `/products/${query.id}` : null);
   const [toggleFav] = useMutation(`/products/${query.id}/fav`);
 
-  const onFavClick = () => {
-    toggleFav({});
+  const onFavClick = async () => {
+    if (!product || !relatedProducts || !ok) return;
+    mutate((prev) => prev && { ...prev, isLiked: !prev.isLiked }, false);
+    await toggleFav({});
+    mutate();
   };
 
   return (
@@ -74,7 +81,7 @@ const ProductDetail: NextPage = () => {
                 {isLiked ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
+                    className="h-6 w-6"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >

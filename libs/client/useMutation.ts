@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-type Trigger = (body: unknown) => void;
+type Trigger = (body: unknown) => Promise<void>;
 
 interface UseMutationState<T, K> {
   data: T | undefined;
@@ -17,19 +17,21 @@ export default function useMutation<T = any, K = any>(
   const [error, setError] = useState<K | undefined>(undefined);
   const [loading, setLoading] = useState(false);
 
-  const trigger: Trigger = (body) => {
+  const trigger: Trigger = async (body) => {
     setLoading(true);
-    fetch(`/api${url}`, {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => res.json().catch(() => {}))
-      .then(setData)
-      .catch(setError)
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      await (
+        await fetch(`/api${url}`, {
+          method: "POST",
+          body: JSON.stringify(body),
+          headers: { "Content-Type": "application/json" },
+        })
+      ).json();
+    } catch (error: any) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return [trigger, { data, loading, error }];
