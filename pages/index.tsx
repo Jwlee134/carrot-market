@@ -1,19 +1,24 @@
 import type { NextPage } from "next";
 import FloatingButton from "@components/FloatingButton";
-import Product from "@components/Product";
+import Item from "@components/Product";
 import Layout from "@components/Layout";
 import Head from "next/head";
 import useUser from "@libs/client/useUser";
 import useSWR from "swr";
-import { Product as ProductType } from "@prisma/client";
+import { Product } from "@prisma/client";
 
-const isProduct = (item: ProductType | number): item is ProductType =>
-  (item as ProductType).id !== undefined;
+export type TProduct = Product & {
+  _count: {
+    favs: number;
+  };
+};
+
+const isProduct = (item: TProduct | number): item is TProduct =>
+  (item as TProduct).id !== undefined;
 
 const Home: NextPage = () => {
   const { user, isLoading } = useUser();
-  const { data } =
-    useSWR<{ ok: boolean; products: ProductType[] }>("/products");
+  const { data } = useSWR<{ ok: boolean; products: TProduct[] }>("/products");
 
   return (
     <Layout title="홈" hasTabBar>
@@ -22,7 +27,7 @@ const Home: NextPage = () => {
       </Head>
       <div className="flex flex-col divide-y">
         {(data?.products ?? Array(20).fill(1)).map((item, i) => (
-          <Product
+          <Item
             key={isProduct(item) ? item.id : i}
             href={isProduct(item) ? `/products/${item.id}` : null}
             {...(isProduct(item) ? item : null)}
