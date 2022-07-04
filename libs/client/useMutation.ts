@@ -20,13 +20,14 @@ export default function useMutation<T = any, K = any>(
   const trigger: Trigger = async (body) => {
     setLoading(true);
     try {
-      await (
+      const data = await (
         await fetch(`/api${url}`, {
           method: "POST",
           body: JSON.stringify(body),
           headers: { "Content-Type": "application/json" },
         })
       ).json();
+      setData(data);
     } catch (error: any) {
       setError(error);
     } finally {
