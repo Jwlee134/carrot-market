@@ -28,11 +28,11 @@ const ProductDetail: NextPage = () => {
   const { query } = useRouter();
   const { data: { ok, product, relatedProducts, isLiked } = {}, mutate } =
     useSWR<ProductDetail>(query.id ? `/products/${query.id}` : null);
-  const [toggleFav] = useMutation(`/products/${query.id}/fav`);
+  const [toggleFav, { loading }] = useMutation(`/products/${query.id}/fav`);
 
   const onFavClick = async () => {
-    if (!product || !relatedProducts || !ok) return;
     mutate((prev) => prev && { ...prev, isLiked: !prev.isLiked }, false);
+    if (loading) return;
     await toggleFav({});
     mutate();
   };
