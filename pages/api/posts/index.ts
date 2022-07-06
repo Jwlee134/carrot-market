@@ -5,6 +5,7 @@ import withSession from "@libs/server/withSession";
 
 async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
   const {
+    query: { lat, lng },
     body: { question, latitude, longitude },
     session: { user },
   } = req;
@@ -26,6 +27,24 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
         user: { select: { name: true } },
         _count: { select: { answers: true, wonderings: true } },
       },
+      ...(lat && lng
+        ? {
+            where: {
+              ...(lat && lng
+                ? {
+                    latitude: {
+                      gte: parseFloat(lat.toString()) - 0.01,
+                      lte: parseFloat(lat.toString()) + 0.01,
+                    },
+                    longitude: {
+                      gte: parseFloat(lng.toString()) - 0.01,
+                      lte: parseFloat(lng.toString()) + 0.01,
+                    },
+                  }
+                : {}),
+            },
+          }
+        : {}),
     });
     res.status(200).json({ ok: true, posts });
   }

@@ -4,6 +4,7 @@ import Layout from "@components/Layout";
 import useSWR from "swr";
 import { Post } from "@prisma/client";
 import PostComponent from "@components/Post";
+import useCoords from "@libs/client/useCoords";
 
 export type PostType = Post & {
   user: { name: string };
@@ -14,10 +15,11 @@ const isPost = (item: PostType | number): item is PostType =>
   (item as PostType).id !== undefined;
 
 const Community: NextPage = () => {
+  const { latitude, longitude } = useCoords();
   const { data: { posts } = {} } = useSWR<{
     ok: true;
     posts: PostType[];
-  }>("/posts");
+  }>(latitude && longitude ? `/posts?lat=${latitude}&lng=${longitude}` : null);
 
   return (
     <Layout title="동네생활" hasTabBar>
