@@ -2,6 +2,7 @@ import client from "@libs/server/client";
 import withHandler, { Response } from "@libs/server/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
 import withSession from "@libs/server/withSession";
+import { parseId } from "@libs/server/utils";
 
 async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
   const {
@@ -9,7 +10,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
     session: { user },
   } = req;
   const post = await client.post.findUnique({
-    where: { id: +(id as string).toString() },
+    where: { id: parseId(id) },
     include: {
       _count: { select: { answers: true, wonderings: true } },
       answers: {

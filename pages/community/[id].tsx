@@ -8,6 +8,8 @@ import Link from "next/link";
 import Skeleton from "@components/Skeleton";
 import useMutation from "@libs/client/useMutation";
 import { cls } from "@libs/client/utils";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 
 type PostType = Post & {
   _count: { answers: number; wonderings: number };
@@ -23,6 +25,10 @@ interface Response {
   isWondering: boolean;
 }
 
+interface Form {
+  answer: string;
+}
+
 const CommunityPostDetail: NextPage = () => {
   const { query } = useRouter();
   const { data: { post, isWondering } = {}, mutate } = useSWR<Response>(
@@ -31,6 +37,16 @@ const CommunityPostDetail: NextPage = () => {
   const [toggleWondering, { loading }] = useMutation(
     `/posts/${query.id}/wonder`
   );
+  const [submitAnswer, { data, loading: answerLoading }] = useMutation<{
+    ok: boolean;
+    answer: Answer;
+  }>(`/posts/${query.id}/answer`);
+  const { register, handleSubmit, reset } = useForm<Form>();
+
+  const onValid = async (data: Form) => {
+    if (answerLoading) return;
+    await submitAnswer(data);
+  };
 
   const onWonderClick = async () => {
     mutate(
@@ -54,6 +70,10 @@ const CommunityPostDetail: NextPage = () => {
     await toggleWondering({});
     mutate();
   };
+
+  useEffect(() => {
+    if (data?.ok) reset();
+  }, [data, reset]);
 
   return (
     <Layout canGoBack>
@@ -144,7 +164,7 @@ const CommunityPostDetail: NextPage = () => {
           </div>
         </div>
         {post?.answers.map((answer) => (
-          <div key={answer.id} className="my-5 space-y-5 px-4">
+          <div key={answer.id} className="mt-5 mb-2 space-y-5 px-4">
             <div className="flex items-start space-x-3">
               <div className="h-8 w-8 rounded-full bg-slate-200" />
               <div>
@@ -152,19 +172,22 @@ const CommunityPostDetail: NextPage = () => {
                   {answer.user.name}
                 </span>
                 <span className="block text-xs text-gray-500">
-                  {answer.createdAt.toISOString()}
+                  {new Date(answer.createdAt).toISOString()}
                 </span>
                 <p className="mt-2 text-gray-700">{answer.text}</p>
               </div>
             </div>
           </div>
         ))}
-        <div className="px-4 pt-2">
-          <Textarea placeholder="Answer this question!" />
+        <form className="px-4 pt-2" onSubmit={handleSubmit(onValid)}>
+          <Textarea
+            register={register("answer", { required: true })}
+            placeholder="Answer this question!"
+          />
           <button className="mt-2 w-full rounded-md border-transparent bg-orange-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
-            Reply
+            {answerLoading ? "Loading" : "Reply"}
           </button>
-        </div>
+        </form>
       </div>
     </Layout>
   );
