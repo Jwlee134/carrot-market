@@ -15,6 +15,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
       _count: { select: { answers: true, wonderings: true } },
       answers: {
         include: { user: { select: { id: true, avatar: true, name: true } } },
+        orderBy: { createdAt: "desc" },
       },
       user: { select: { id: true, avatar: true, name: true } },
     },

@@ -21,7 +21,7 @@ const Layout = ({ children, title, canGoBack, hasTabBar }: Props) => {
     <>
       <header
         className={cls(
-          "fixed top-0 flex h-14 w-full max-w-lg items-center border-b bg-white px-4 text-lg font-medium text-gray-700",
+          "fixed top-0 z-10 flex h-14 w-full max-w-lg items-center border-b bg-white px-4 text-lg font-medium text-gray-700",
           canGoBack ? "" : "justify-center"
         )}
       >
@@ -52,7 +52,7 @@ const Layout = ({ children, title, canGoBack, hasTabBar }: Props) => {
       </header>
       <div className={cls("pt-14", hasTabBar ? "pb-20" : "")}>{children}</div>
       {hasTabBar && (
-        <nav className="fixed bottom-0 flex h-20 w-full max-w-lg items-center justify-between border-t bg-white text-xs text-gray-700">
+        <nav className="fixed bottom-0 z-10 flex h-20 w-full max-w-lg items-center justify-between border-t bg-white text-xs text-gray-700">
           <Link href="/">
             <a
               className={cls(

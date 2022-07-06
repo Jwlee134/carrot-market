@@ -10,13 +10,16 @@ import useMutation from "@libs/client/useMutation";
 import { cls } from "@libs/client/utils";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import AnswerComponent from "@components/Answer";
+
+export type AnswerType = Answer & {
+  user: { id: number; name: string; avatar: string | null };
+};
 
 type PostType = Post & {
   _count: { answers: number; wonderings: number };
   user: { id: number; name: string; avatar: string | null };
-  answers: (Answer & {
-    user: { id: number; name: string; avatar: string | null };
-  })[];
+  answers: AnswerType[];
 };
 
 interface Response {
@@ -28,6 +31,9 @@ interface Response {
 interface Form {
   answer: string;
 }
+
+const isAnswer = (item: AnswerType | number): item is AnswerType =>
+  (item as AnswerType).id !== undefined;
 
 const CommunityPostDetail: NextPage = () => {
   const { query } = useRouter();
@@ -72,8 +78,11 @@ const CommunityPostDetail: NextPage = () => {
   };
 
   useEffect(() => {
-    if (data?.ok) reset();
-  }, [data, reset]);
+    if (data?.ok) {
+      reset();
+      mutate();
+    }
+  }, [data, reset, mutate]);
 
   return (
     <Layout canGoBack>
@@ -163,21 +172,11 @@ const CommunityPostDetail: NextPage = () => {
             </div>
           </div>
         </div>
-        {post?.answers.map((answer) => (
-          <div key={answer.id} className="mt-5 mb-2 space-y-5 px-4">
-            <div className="flex items-start space-x-3">
-              <div className="h-8 w-8 rounded-full bg-slate-200" />
-              <div>
-                <span className="block text-sm font-medium text-gray-700">
-                  {answer.user.name}
-                </span>
-                <span className="block text-xs text-gray-500">
-                  {new Date(answer.createdAt).toISOString()}
-                </span>
-                <p className="mt-2 text-gray-700">{answer.text}</p>
-              </div>
-            </div>
-          </div>
+        {(post?.answers ?? [1, 2, 3, 4]).map((answer, i) => (
+          <AnswerComponent
+            key={isAnswer(answer) ? answer.id : i}
+            {...(isAnswer(answer) ? answer : null)}
+          />
         ))}
         <form className="px-4 pt-2" onSubmit={handleSubmit(onValid)}>
           <Textarea
