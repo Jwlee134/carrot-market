@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import useCoords from "@libs/client/useCoords";
 
 interface Form {
   question: string;
@@ -17,10 +18,11 @@ const Write: NextPage = () => {
     "/posts"
   );
   const router = useRouter();
+  const { latitude, longitude } = useCoords();
 
   const onValid = (data: Form) => {
     if (loading) return;
-    submit(data);
+    submit({ ...data, latitude, longitude });
   };
 
   useEffect(() => {
