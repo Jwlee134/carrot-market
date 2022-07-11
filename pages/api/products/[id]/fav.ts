@@ -15,14 +15,15 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
   if (!productExists) {
     res.status(404).json({ ok: false });
   }
-  const favExists = await client.fav.findFirst({
-    where: { productId: parsedId, userId: user?.id },
+  const favExists = await client.record.findFirst({
+    where: { kinds: "Fav", productId: parsedId, userId: user?.id },
   });
   if (favExists) {
-    await client.fav.delete({ where: { id: favExists.id } });
+    await client.record.delete({ where: { id: favExists.id } });
   } else {
-    await client.fav.create({
+    await client.record.create({
       data: {
+        kinds: "Fav",
         product: { connect: { id: parsedId } },
         user: { connect: { id: user?.id } },
       },

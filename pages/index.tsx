@@ -3,21 +3,15 @@ import FloatingButton from "@components/FloatingButton";
 import Item from "@components/Product";
 import Layout from "@components/Layout";
 import Head from "next/head";
-import useUser from "@libs/client/useUser";
 import useSWR from "swr";
 import { Product } from "@prisma/client";
 
-export type TProduct = Product & {
-  _count: {
-    favs: number;
-  };
-};
+export type TProduct = Product & { _count: { records: number } };
 
 const isProduct = (item: TProduct | number): item is TProduct =>
   (item as TProduct).id !== undefined;
 
 const Home: NextPage = () => {
-  const { user, isLoading } = useUser();
   const { data } = useSWR<{ ok: boolean; products: TProduct[] }>("/products");
 
   return (

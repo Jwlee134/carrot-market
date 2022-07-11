@@ -13,19 +13,21 @@ datasource db {
 }
 
 model User {
-  id         Int         @id @default(autoincrement())
-  name       String
-  phone      String?     @unique
-  email      String?     @unique
-  avatar     String?
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  tokens     Token[]
-  products   Product[]
-  favs       Fav[]
-  posts      Post[]
-  answers    Answer[]
-  wonderings Wondering[]
+  id              Int         @id @default(autoincrement())
+  name            String
+  phone           String?     @unique
+  email           String?     @unique
+  avatar          String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  tokens          Token[]
+  products        Product[]
+  records         Record[]
+  posts           Post[]
+  answers         Answer[]
+  wonderings      Wondering[]
+  writtenReviews  Review[]    @relation(name: "writtenReviews")
+  receivedReviews Review[]    @relation(name: "receivedReviews")
 }
 
 model Token {
@@ -47,10 +49,16 @@ model Product {
   userId      Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  favs        Fav[]
+  records     Record[]
 }
 
-model Fav {
+enum Kinds {
+  Fav
+  Sold
+  Bought
+}
+
+model Record {
   id        Int      @id @default(autoincrement())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -58,6 +66,7 @@ model Fav {
   updatedAt DateTime @updatedAt
   userId    Int
   productId Int
+  kinds     Kinds
 }
 
 model Post {
@@ -92,6 +101,17 @@ model Wondering {
   userId    Int
   post      Post     @relation(fields: [postId], references: [id])
   postId    Int
+}
+
+model Review {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  text         String   @db.MediumText
+  createdBy    User     @relation(name: "writtenReviews", fields: [createdById], references: [id], onDelete: Cascade)
+  createdById  Int
+  createdFor   User     @relation(name: "receivedReviews", fields: [createdForId], references: [id], onDelete: Cascade)
+  createdForId Int
 }
 
 // TINYTEXT 256 bytes 최대 255 글자

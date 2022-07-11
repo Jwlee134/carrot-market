@@ -30,18 +30,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
       ...(lat && lng
         ? {
             where: {
-              ...(lat && lng
-                ? {
-                    latitude: {
-                      gte: parseFloat(lat.toString()) - 0.01,
-                      lte: parseFloat(lat.toString()) + 0.01,
-                    },
-                    longitude: {
-                      gte: parseFloat(lng.toString()) - 0.01,
-                      lte: parseFloat(lng.toString()) + 0.01,
-                    },
-                  }
-                : {}),
+              latitude: {
+                gte: parseFloat(lat.toString()) - 0.01,
+                lte: parseFloat(lat.toString()) + 0.01,
+              },
+              longitude: {
+                gte: parseFloat(lng.toString()) - 0.01,
+                lte: parseFloat(lng.toString()) + 0.01,
+              },
             },
           }
         : {}),

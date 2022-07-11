@@ -23,7 +23,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
   if (req.method == "GET") {
     const products = await client.product.findMany({
       orderBy: { createdAt: "desc" },
-      include: { _count: { select: { favs: true } } },
+      include: { _count: { select: { records: true } } },
     });
     res.status(200).json({ ok: true, products });
   }

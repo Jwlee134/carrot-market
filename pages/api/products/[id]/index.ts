@@ -19,8 +19,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
     where: { OR: terms, AND: [{ id: { not: product?.id } }] },
   });
   const isLiked = Boolean(
-    await client.fav.findFirst({
-      where: { productId: product?.id, userId: user?.id },
+    await client.record.findFirst({
+      where: { kinds: "Fav", productId: product?.id, userId: user?.id },
       select: { id: true },
     })
   );
