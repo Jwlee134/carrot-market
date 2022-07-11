@@ -13,7 +13,7 @@ interface Response {
 
 const Profile: NextPage = () => {
   const { data } = useSWR<Response>("/users/reviews");
-  console.log(data);
+
   return (
     <Layout title="나의 계정" hasTabBar>
       <div className="px-4 py-4">
@@ -31,7 +31,7 @@ const Profile: NextPage = () => {
           </a>
         </Link>
         <div className="mt-10 flex justify-around">
-          <Link href="/profile/sold">
+          <Link href="/profile/records?type=Sold">
             <a>
               <div className="flex cursor-pointer flex-col items-center">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-orange-500 text-white">
@@ -56,7 +56,7 @@ const Profile: NextPage = () => {
               </div>
             </a>
           </Link>
-          <Link href="/profile/bought">
+          <Link href="/profile/records?type=Bought">
             <a>
               <div className="flex cursor-pointer flex-col items-center">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-orange-500 text-white">
@@ -81,7 +81,7 @@ const Profile: NextPage = () => {
               </div>
             </a>
           </Link>
-          <Link href="/profile/loved">
+          <Link href="/profile/records?type=Fav">
             <a>
               <div className="flex cursor-pointer flex-col items-center">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-orange-500 text-white">

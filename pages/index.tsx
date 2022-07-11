@@ -4,13 +4,8 @@ import Item from "@components/Product";
 import Layout from "@components/Layout";
 import Head from "next/head";
 import useSWR from "swr";
-import { Product } from "@prisma/client";
 import useUser from "@libs/client/useUser";
-
-export type TProduct = Product & { _count: { records: number } };
-
-const isProduct = (item: TProduct | number): item is TProduct =>
-  (item as TProduct).id !== undefined;
+import { isProduct, TProduct } from "@libs/client/utils";
 
 const Home: NextPage = () => {
   const {} = useUser();
