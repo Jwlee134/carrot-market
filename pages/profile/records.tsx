@@ -1,14 +1,13 @@
 import type { NextPage } from "next";
-import Product from "@components/Product";
 import Layout from "@components/Layout";
 import useSWR from "swr";
-import { Kinds, Product as TProduct } from "@prisma/client";
-import { isProduct } from "@libs/client/utils";
+import { Kinds } from "@prisma/client";
 import { useRouter } from "next/router";
+import ProductList, { TProduct } from "@components/ProductList";
 
 interface Response {
   ok: true;
-  records: (TProduct & { _count: { records: number } })[];
+  records: TProduct[];
 }
 
 const Records: NextPage = () => {
@@ -33,13 +32,10 @@ const Records: NextPage = () => {
       canGoBack
     >
       <div className="flex flex-col divide-y">
-        {(data?.records ?? Array(10).fill(1)).map((fav, i) => (
-          <Product
-            key={i}
-            href={isProduct(fav) ? `/products/${fav.id}` : null}
-            {...(isProduct(fav) ? fav : null)}
-          />
-        ))}
+        <ProductList
+          data={data?.records}
+          href={({ id }) => `/products/${id}`}
+        />
       </div>
     </Layout>
   );

@@ -1,11 +1,10 @@
 import type { NextPage } from "next";
 import FloatingButton from "@components/FloatingButton";
-import Item from "@components/Product";
 import Layout from "@components/Layout";
 import Head from "next/head";
 import useSWR from "swr";
 import useUser from "@libs/client/useUser";
-import { isProduct, TProduct } from "@libs/client/utils";
+import ProductList, { TProduct } from "@components/ProductList";
 
 const Home: NextPage = () => {
   const {} = useUser();
@@ -17,13 +16,10 @@ const Home: NextPage = () => {
         <title>홈</title>
       </Head>
       <div className="flex flex-col divide-y">
-        {(data?.products ?? Array(20).fill(1)).map((item, i) => (
-          <Item
-            key={isProduct(item) ? item.id : i}
-            href={isProduct(item) ? `/products/${item.id}` : null}
-            {...(isProduct(item) ? item : null)}
-          />
-        ))}
+        <ProductList
+          data={data?.products}
+          href={({ id }) => `/products/${id}`}
+        />
         <FloatingButton href="/products/upload">
           <svg
             className="h-6 w-6"
