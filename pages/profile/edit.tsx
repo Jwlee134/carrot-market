@@ -5,8 +5,10 @@ import Layout from "@components/Layout";
 import useUser from "@libs/client/useUser";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import useMutation from "@libs/client/useMutation";
 
 interface Form {
+  name?: string;
   email?: string;
   phone?: string;
   error?: string;
@@ -20,19 +22,33 @@ const Edit: NextPage = () => {
     setValue,
     setError,
     formState: { errors },
-  } = useForm<Form>();
+    clearErrors,
+  } = useForm<Form>({ mode: "onChange" });
+  const [edit, { data, loading }] = useMutation<{
+    ok: boolean;
+    error?: string;
+  }>(`/users/me`);
 
-  const onValid = ({ email, phone }: Form) => {
-    if (!email && !phone) {
+  const onValid = ({ name, email, phone }: Form) => {
+    if (loading) return;
+    if (!name && !email && !phone) {
       setError("error", { message: "At least one input should be filled." });
       return;
     }
+    edit({ name, email, phone });
   };
 
   useEffect(() => {
+    if (user?.name) setValue("name", user.name);
     if (user?.email) setValue("email", user.email);
     if (user?.phone) setValue("phone", user.phone);
   }, [user, setValue]);
+
+  useEffect(() => {
+    if (data?.error) {
+      setError("error", { message: data.error });
+    }
+  }, [data, setError]);
 
   return (
     <Layout canGoBack>
@@ -53,6 +69,12 @@ const Edit: NextPage = () => {
           </label>
         </div>
         <Input
+          register={register("name")}
+          label="Name"
+          name="email"
+          kind="text"
+        />
+        <Input
           register={register("email")}
           label="Email address"
           name="email"
@@ -60,17 +82,32 @@ const Edit: NextPage = () => {
           type="email"
         />
         <Input
-          register={register("phone")}
+          register={register("phone", {
+            maxLength: {
+              value: 10,
+              message: "Should be shorter than 11 chars",
+            },
+            minLength: { value: 10, message: "Should be longer than 9 chars" },
+          })}
           label="Phone number"
           name="phone"
           kind="phone"
+          onFocus={() => clearErrors("error")}
         />
+        {errors.phone && (
+          <span className="mt-4 block text-center font-medium text-red-500">
+            {errors.phone.message}
+          </span>
+        )}
         {errors.error && (
           <span className="mt-4 block text-center font-medium text-red-500">
             {errors.error.message}
           </span>
         )}
-        <Button text="Update" />
+        <Button
+          text={loading ? "Loading" : "Update"}
+          onClick={handleSubmit(onValid)}
+        />
       </form>
     </Layout>
   );
