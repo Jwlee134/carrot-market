@@ -3,11 +3,9 @@ import FloatingButton from "@components/FloatingButton";
 import Layout from "@components/Layout";
 import Head from "next/head";
 import useSWR from "swr";
-import useUser from "@libs/client/useUser";
 import ProductList, { TProduct } from "@components/ProductList";
 
 const Home: NextPage = () => {
-  const {} = useUser();
   const { data } = useSWR<{ ok: boolean; products: TProduct[] }>("/products");
 
   return (

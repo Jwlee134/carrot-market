@@ -13,7 +13,7 @@ export default function useUser() {
   const { data, error } = useSWR<Response>("/users/me");
 
   useEffect(() => {
-    if (data && !data.user) {
+    if (data && !data.user && router.pathname !== "/enter") {
       router.replace("/enter");
     }
   }, [router, data]);
