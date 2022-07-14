@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { Stream } from "@prisma/client";
 
 interface Form {
   name: string;
@@ -19,7 +18,7 @@ const Create: NextPage = () => {
   const { register, handleSubmit } = useForm<Form>();
   const [create, { data, loading }] = useMutation<{
     ok: boolean;
-    stream: Stream;
+    stream: { id: number };
   }>("/streams");
   const router = useRouter();
 
@@ -42,7 +41,7 @@ const Create: NextPage = () => {
           name="name"
         />
         <Input
-          register={register("price", { required: true })}
+          register={register("price", { required: true, valueAsNumber: true })}
           kind="price"
           label="Price"
           name="price"
