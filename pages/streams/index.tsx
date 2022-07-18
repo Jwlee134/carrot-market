@@ -2,27 +2,44 @@ import type { NextPage } from "next";
 import FloatingButton from "@components/FloatingButton";
 import Layout from "@components/Layout";
 import Link from "next/link";
-import useSWR from "swr";
 import { Stream } from "@prisma/client";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+import useSWRInfinite from "swr/infinite";
 
 const Streams: NextPage = () => {
-  const { data: { streams } = {} } = useSWR<{ ok: boolean; streams: Stream[] }>(
-    "/streams"
-  );
+  const { ref, inView } = useInView();
+  const { data, setSize } = useSWRInfinite<{
+    ok: boolean;
+    streams: Stream[];
+  }>((pageIndex, previousPageData) => {
+    if (previousPageData && !previousPageData.streams.length) return null;
+    if (pageIndex === 0) return `/streams`;
+    return `/streams?cursor=${previousPageData?.streams.at(-1)?.id}`;
+  });
+
+  useEffect(() => {
+    if (!inView) return;
+    setSize((size) => size + 1);
+  }, [inView, setSize]);
 
   return (
     <Layout title="라이브" hasTabBar>
       <div className="space-y-4 divide-y-2">
-        {streams?.map((stream) => (
-          <Link key={stream.id} href={`/streams/${stream.id}`}>
-            <a>
-              <div className="px-4 py-4">
-                <div className="aspect-video w-full rounded-md bg-slate-300 shadow-sm"></div>
-                <h3 className="mt-2 text-lg text-gray-700">{stream.name}</h3>
-              </div>
-            </a>
-          </Link>
-        ))}
+        {data?.map((item) =>
+          item.streams?.map((stream, i) => (
+            <Link key={stream.id} href={`/streams/${stream.id}`}>
+              <a>
+                <div className="px-4 py-4">
+                  <div className="aspect-video w-full rounded-md bg-slate-300 shadow-sm"></div>
+                  <h3 className="mt-2 text-lg text-gray-700">{stream.name}</h3>
+                </div>
+                {i === item.streams.length - 1 && <div ref={ref} />}
+              </a>
+            </Link>
+          ))
+        )}
+
         <FloatingButton href="/streams/create">
           <svg
             className="h-6 w-6"

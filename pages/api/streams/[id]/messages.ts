@@ -10,7 +10,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
     query: { id },
     body: { message },
   } = req;
-  const streamMessage = await client.streamMessage.create({
+  await client.streamMessage.create({
     data: {
       text: message,
       user: { connect: { id: user?.id } },

@@ -2,18 +2,23 @@ import { PrismaClient } from "@prisma/client";
 
 const client = new PrismaClient();
 
+async function delay() {
+  return new Promise((resolve) => setTimeout(resolve, 1000));
+}
+
 async function main() {
-  [...Array.from(Array(500).keys())].forEach(async (item) => {
+  for (const i of [...Array.from(Array(50).keys())]) {
     await client.stream.create({
       data: {
-        name: String(item),
-        description: String(item),
-        price: item,
+        name: String(i),
+        description: String(i),
+        price: i,
         user: { connect: { id: 1 } },
       },
     });
-    console.log(`${item}/500`);
-  });
+    console.log(`${i}/50`);
+    await delay();
+  }
 }
 
 main()
