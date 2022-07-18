@@ -7,24 +7,44 @@ import { useRouter } from "next/router";
 import { Stream } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
+import useUser from "@libs/client/useUser";
+import { useEffect } from "react";
+
+interface Response {
+  ok: boolean;
+  stream: Stream & {
+    messages: {
+      user: { id: number; avatar: string | null };
+      id: number;
+      text: string;
+    }[];
+  };
+}
 
 interface Form {
   message: string;
 }
 
 const Stream: NextPage = () => {
+  const { user } = useUser();
   const { query } = useRouter();
-  const { data: { stream } = {} } = useSWR<{ ok: boolean; stream: Stream }>(
+  const { data: { stream } = {}, mutate } = useSWR<Response>(
     query.id ? `/streams/${query.id}` : null
   );
   const { register, handleSubmit, reset } = useForm<Form>();
-  const [send, { loading }] = useMutation(`/streams/${query.id}/messages`);
+  const [send, { loading, data }] = useMutation<{ ok: true }>(
+    `/streams/${query.id}/messages`
+  );
 
   const onValid = async (data: Form) => {
     if (loading) return;
     await send(data);
     reset();
   };
+
+  useEffect(() => {
+    if (data?.ok) mutate();
+  }, [data, mutate]);
 
   return (
     <Layout canGoBack>
@@ -43,8 +63,13 @@ const Stream: NextPage = () => {
             className="h-[50vh] space-y-4 overflow-y-scroll py-10 px-4 pb-16"
             onSubmit={handleSubmit(onValid)}
           >
-            <Message text="Hi how much are you selling them for?" />
-            <Message text="I want ￦20,000" reversed />
+            {stream?.messages.map((msg) => (
+              <Message
+                key={msg.id}
+                text={msg.text}
+                reversed={msg.user.id === user?.id}
+              />
+            ))}
             <ChatInput register={register("message", { required: true })} />
           </form>
         </div>

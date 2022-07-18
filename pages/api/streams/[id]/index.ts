@@ -10,6 +10,15 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
   } = req;
   const stream = await client.stream.findUnique({
     where: { id: parseId(id) },
+    include: {
+      messages: {
+        select: {
+          id: true,
+          text: true,
+          user: { select: { id: true, avatar: true } },
+        },
+      },
+    },
   });
   if (!stream) {
     res.status(404).json({ ok: false });
