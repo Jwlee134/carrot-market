@@ -5,12 +5,26 @@ import Message from "@components/Message";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import { Stream } from "@prisma/client";
+import { useForm } from "react-hook-form";
+import useMutation from "@libs/client/useMutation";
+
+interface Form {
+  message: string;
+}
 
 const Stream: NextPage = () => {
   const { query } = useRouter();
   const { data: { stream } = {} } = useSWR<{ ok: boolean; stream: Stream }>(
     query.id ? `/streams/${query.id}` : null
   );
+  const { register, handleSubmit, reset } = useForm<Form>();
+  const [send, { loading }] = useMutation(`/streams/${query.id}/messages`);
+
+  const onValid = async (data: Form) => {
+    if (loading) return;
+    await send(data);
+    reset();
+  };
 
   return (
     <Layout canGoBack>
@@ -25,11 +39,14 @@ const Stream: NextPage = () => {
         </div>
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Live Chat</h2>
-          <div className="h-[50vh] space-y-4 overflow-y-scroll py-10 px-4 pb-16">
+          <form
+            className="h-[50vh] space-y-4 overflow-y-scroll py-10 px-4 pb-16"
+            onSubmit={handleSubmit(onValid)}
+          >
             <Message text="Hi how much are you selling them for?" />
             <Message text="I want ￦20,000" reversed />
-            <ChatInput />
-          </div>
+            <ChatInput register={register("message", { required: true })} />
+          </form>
         </div>
       </div>
     </Layout>

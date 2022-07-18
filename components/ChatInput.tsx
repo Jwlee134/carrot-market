@@ -1,12 +1,16 @@
 import { InputHTMLAttributes } from "react";
+import { UseFormRegisterReturn } from "react-hook-form";
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {}
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
+  register: UseFormRegisterReturn;
+}
 
-const ChatInput = ({ ...rest }: Props) => {
+const ChatInput = ({ register, ...rest }: Props) => {
   return (
     <div className="fixed inset-x-0 bottom-0 mx-auto w-full max-w-md bg-white py-2">
       <div className="relative flex items-center">
         <input
+          {...register}
           type="text"
           className="w-full rounded-full border-gray-300 pr-12 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500"
           {...rest}
