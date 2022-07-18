@@ -8,7 +8,6 @@ import { Stream } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
 import useUser from "@libs/client/useUser";
-import { useEffect } from "react";
 
 interface Response {
   ok: boolean;
@@ -29,22 +28,35 @@ const Stream: NextPage = () => {
   const { user } = useUser();
   const { query } = useRouter();
   const { data: { stream } = {}, mutate } = useSWR<Response>(
-    query.id ? `/streams/${query.id}` : null
+    query.id ? `/streams/${query.id}` : null,
+    { refreshInterval: 1000 }
   );
   const { register, handleSubmit, reset } = useForm<Form>();
-  const [send, { loading, data }] = useMutation<{ ok: true }>(
-    `/streams/${query.id}/messages`
-  );
+  const [send] = useMutation<{ ok: true }>(`/streams/${query.id}/messages`);
 
   const onValid = async (data: Form) => {
-    if (loading) return;
-    await send(data);
     reset();
+    mutate(
+      (prev) =>
+        prev &&
+        ({
+          ...prev,
+          stream: {
+            ...prev.stream,
+            messages: [
+              ...prev.stream.messages,
+              {
+                id: Date.now(),
+                text: data.message,
+                user: { id: user?.id, avatar: user?.avatar },
+              },
+            ],
+          },
+        } as any),
+      { revalidate: false, rollbackOnError: true }
+    );
+    await send(data);
   };
-
-  useEffect(() => {
-    if (data?.ok) mutate();
-  }, [data, mutate]);
 
   return (
     <Layout canGoBack>
