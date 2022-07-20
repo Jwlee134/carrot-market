@@ -38,15 +38,17 @@ const Edit: NextPage = () => {
       setError("error", { message: "At least one input should be filled." });
       return;
     }
-    let avatarUrl = "";
+    let avatarId = "";
     if (avatar?.length) {
-      const { id, uploadURL } = await (await fetch("/api/files")).json();
+      const { uploadURL } = await (await fetch("/api/files")).json();
       const form = new FormData();
       form.append("file", avatar[0], user?.id + "");
-      await fetch(uploadURL, { method: "POST", body: form });
+      const {
+        result: { id },
+      } = await (await fetch(uploadURL, { method: "POST", body: form })).json();
+      avatarId = id;
     }
-    return;
-    edit({ name, email, phone, ...(avatarUrl && { avatarUrl }) });
+    edit({ name, email, phone, ...(avatarId && { avatarId }) });
   };
 
   useEffect(() => {

@@ -10,7 +10,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
     res.status(200).json({ ok: true, user });
   }
   if (req.method === "POST") {
-    const { email, phone, name } = req.body;
+    const { email, phone, name, avatarId } = req.body;
     if (email && email !== user?.email) {
       const emailExists = Boolean(
         await client.user.findUnique({ where: { email }, select: { id: true } })
@@ -19,8 +19,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
         return res
           .status(409)
           .json({ ok: false, error: "This email is already taken." });
-      } else {
-        await client.user.update({ where: { id }, data: { email } });
       }
     }
     if (phone && phone !== user?.phone) {
@@ -31,13 +29,17 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
         return res
           .status(409)
           .json({ ok: false, error: "This phone number is already taken." });
-      } else {
-        await client.user.update({ where: { id }, data: { phone } });
       }
     }
-    if (name) {
-      await client.user.update({ where: { id }, data: { name } });
-    }
+    await client.user.update({
+      where: { id },
+      data: {
+        ...(email ? { email } : {}),
+        ...(phone ? { phone } : {}),
+        ...(name ? { name } : {}),
+        ...(avatarId ? { avatar: avatarId } : {}),
+      },
+    });
     res.status(200).json({ ok: true });
   }
 }
