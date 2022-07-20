@@ -6,7 +6,7 @@ import withSession from "@libs/server/withSession";
 async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
   if (req.method === "POST") {
     const {
-      body: { name, price, description },
+      body: { name, price, description, pictureId },
       session: { user: { id } = {} },
     } = req;
     const product = await client.product.create({
@@ -15,7 +15,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
         price: +price,
         description,
         user: { connect: { id } },
-        image: "",
+        ...(pictureId ? { image: pictureId } : { image: "" }),
       },
     });
     res.status(200).json({ ok: true, product });

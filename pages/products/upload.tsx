@@ -5,7 +5,7 @@ import Textarea from "@components/Textarea";
 import { useForm } from "react-hook-form";
 import Layout from "@components/Layout";
 import useMutation from "@libs/client/useMutation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Product } from "@prisma/client";
 import { useRouter } from "next/router";
 
@@ -13,17 +13,31 @@ interface Form {
   name: string;
   price: number;
   description: string;
+  picture: FileList;
 }
 
 const Upload: NextPage = () => {
-  const { register, handleSubmit } = useForm<Form>();
-  const [upload, { data, loading }] =
-    useMutation<{ ok: boolean; product: Product }>("/products");
+  const { register, handleSubmit, watch } = useForm<Form>();
+  const [upload, { data, loading }] = useMutation<{
+    ok: boolean;
+    product: Product;
+  }>("/products");
   const router = useRouter();
+  const [thumb, setThumb] = useState("");
 
-  const onValid = (data: Form) => {
+  const onValid = async ({ name, price, description, picture }: Form) => {
     if (loading) return;
-    upload(data);
+    let pictureId = "";
+    if (picture?.length) {
+      const { uploadURL } = await (await fetch("/api/files")).json();
+      const form = new FormData();
+      form.append("file", picture[0], name);
+      const {
+        result: { id },
+      } = await (await fetch(uploadURL, { method: "POST", body: form })).json();
+      pictureId = id;
+    }
+    upload({ name, price, description, ...(pictureId && { pictureId }) });
   };
 
   useEffect(() => {
@@ -32,11 +46,17 @@ const Upload: NextPage = () => {
     }
   }, [data, router]);
 
+  const picture = watch("picture");
+
+  useEffect(() => {
+    if (picture?.length) setThumb(URL.createObjectURL(picture[0]));
+  }, [picture]);
+
   return (
     <Layout canGoBack title="Upload Product">
       <form className="space-y-5 px-4 py-16" onSubmit={handleSubmit(onValid)}>
         <div>
-          <label className="flex h-48 w-full cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-gray-300 text-gray-600 hover:border-orange-500 hover:text-orange-500">
+          <label className="relative flex h-48 w-full cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-gray-300 text-gray-600 hover:border-orange-500 hover:text-orange-500">
             <svg
               className="h-12 w-12"
               stroke="currentColor"
@@ -51,7 +71,19 @@ const Upload: NextPage = () => {
                 strokeLinejoin="round"
               />
             </svg>
-            <input className="hidden" type="file" />
+            <input
+              className="hidden"
+              type="file"
+              {...register("picture")}
+              accept="image/*"
+            />
+            {thumb && (
+              <img
+                src={thumb}
+                alt="Image Preview"
+                className="absolute h-48 w-full cursor-pointer items-center justify-center rounded-md object-cover"
+              />
+            )}
           </label>
         </div>
         <Input
