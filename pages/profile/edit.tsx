@@ -40,7 +40,10 @@ const Edit: NextPage = () => {
     }
     let avatarUrl = "";
     if (avatar?.length) {
-      const couldflareUrl = await (await fetch("/api/files")).json();
+      const { id, uploadURL } = await (await fetch("/api/files")).json();
+      const form = new FormData();
+      form.append("file", avatar[0], user?.id + "");
+      await fetch(uploadURL, { method: "POST", body: form });
     }
     return;
     edit({ name, email, phone, ...(avatarUrl && { avatarUrl }) });
