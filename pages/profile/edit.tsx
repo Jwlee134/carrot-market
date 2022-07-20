@@ -32,15 +32,18 @@ const Edit: NextPage = () => {
   }>(`/users/me`);
   const [thumbnail, setThumbnail] = useState("");
 
-  const onValid = ({ name, email, phone, avatar }: Form) => {
-    console.log(avatar);
-    return;
+  const onValid = async ({ name, email, phone, avatar }: Form) => {
     if (loading) return;
     if (!name && !email && !phone) {
       setError("error", { message: "At least one input should be filled." });
       return;
     }
-    edit({ name, email, phone });
+    let avatarUrl = "";
+    if (avatar?.length) {
+      const couldflareUrl = await (await fetch("/api/files")).json();
+    }
+    return;
+    edit({ name, email, phone, ...(avatarUrl && { avatarUrl }) });
   };
 
   useEffect(() => {
