@@ -9,6 +9,7 @@ import Skeleton from "@components/Skeleton";
 import RelatedProduct from "@components/RelatedProduct";
 import useMutation from "@libs/client/useMutation";
 import { cls } from "@libs/client/utils";
+import Image from "next/image";
 
 type ProductType = Product & {
   user: { id: number; avatar: string; name: string };
@@ -41,13 +42,23 @@ const ProductDetail: NextPage = () => {
     <Layout canGoBack>
       <div className="px-4 py-10">
         <div className="mb-8">
-          <div className="h-96 bg-slate-300" />
-          <div className="flex items-center space-x-3 border-t border-b py-3">
-            <img
-              src={product?.user.avatar}
-              alt="Profile picture of seller"
-              className="h-12 w-12 rounded-full "
-            />
+          {product?.image ? (
+            <img src={product?.image} />
+          ) : (
+            <div className="h-96 bg-slate-300" />
+          )}
+          <div className="flex items-center space-x-3 border-t border-b py-3 leading-none">
+            {product?.user.avatar ? (
+              <Image
+                src={product?.user.avatar}
+                alt="Profile picture of seller"
+                className="h-12 w-12 rounded-full"
+                width={48}
+                height={48}
+              />
+            ) : (
+              <Skeleton width="3rem" height="3rem" borderRadius={1000} />
+            )}
             <div>
               <p className="text-sm font-medium text-gray-700">
                 {product?.user.name || <Skeleton />}
