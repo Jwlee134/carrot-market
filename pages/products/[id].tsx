@@ -43,7 +43,11 @@ const ProductDetail: NextPage = () => {
         <div className="mb-8">
           <div className="h-96 bg-slate-300" />
           <div className="flex items-center space-x-3 border-t border-b py-3">
-            <div className="h-12 w-12 rounded-full bg-slate-300" />
+            <img
+              src={product?.user.avatar}
+              alt="Profile picture of seller"
+              className="h-12 w-12 rounded-full "
+            />
             <div>
               <p className="text-sm font-medium text-gray-700">
                 {product?.user.name || <Skeleton />}

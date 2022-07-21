@@ -6,6 +6,7 @@ import useUser from "@libs/client/useUser";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import useMutation from "@libs/client/useMutation";
+import Skeleton from "@components/Skeleton";
 
 interface Form {
   name?: string;
@@ -55,6 +56,7 @@ const Edit: NextPage = () => {
     if (user?.name) setValue("name", user.name);
     if (user?.email) setValue("email", user.email);
     if (user?.phone) setValue("phone", user.phone);
+    if (user?.avatar) setThumbnail(user.avatar);
   }, [user, setValue]);
 
   useEffect(() => {
@@ -73,15 +75,17 @@ const Edit: NextPage = () => {
     <Layout canGoBack>
       <form className="space-y-4 py-10 px-4" onSubmit={handleSubmit(onValid)}>
         <div className="flex items-center space-x-3">
-          {thumbnail ? (
-            <img
-              className="h-14 w-14 rounded-full"
-              src={thumbnail}
-              alt="Profile Preview"
-            />
-          ) : (
-            <div className="h-14 w-14 rounded-full bg-slate-400" />
-          )}
+          <div className="h-14 w-14 overflow-hidden rounded-full">
+            {thumbnail ? (
+              <img
+                className="h-14 w-14"
+                src={thumbnail}
+                alt="Profile Picture Preview"
+              />
+            ) : (
+              <Skeleton width="3.5rem" height="3.5rem" />
+            )}
+          </div>
           <label
             htmlFor="picture"
             className="cursor-pointer rounded-md border border-gray-300 py-2 px-3 text-sm font-medium text-gray-700 shadow-sm focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"

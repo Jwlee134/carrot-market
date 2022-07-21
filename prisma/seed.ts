@@ -8,12 +8,13 @@ async function delay() {
 
 async function main() {
   for (const i of [...Array.from(Array(50).keys())]) {
-    await client.stream.create({
+    await client.product.create({
       data: {
-        name: String(i),
-        description: String(i),
-        price: i,
         user: { connect: { id: 1 } },
+        name: i + "",
+        description: i + "",
+        price: i,
+        image: "",
       },
     });
     console.log(`${i}/50`);

@@ -4,6 +4,8 @@ import Layout from "@components/Layout";
 import Head from "next/head";
 import useSWR from "swr";
 import ProductList, { TProduct } from "@components/ProductList";
+import Image from "next/image";
+import pic from "../public/local.jpeg";
 
 const Home: NextPage = () => {
   const { data } = useSWR<{ ok: boolean; products: TProduct[] }>("/products");
@@ -14,6 +16,7 @@ const Home: NextPage = () => {
         <title>홈</title>
       </Head>
       <div className="flex flex-col divide-y">
+        <Image src={pic} placeholder="blur" quality={100} />
         <ProductList
           data={data?.products}
           href={({ id }) => `/products/${id}`}

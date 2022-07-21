@@ -24,7 +24,11 @@ const Profile: NextPage = () => {
         <Link href="/profile/edit">
           <a>
             <div className="flex w-fit items-center space-x-3">
-              <div className="h-16 w-16 rounded-full bg-slate-500" />
+              <img
+                src={user?.avatar}
+                className="h-16 w-16 rounded-full"
+                alt="My Profile Picture"
+              />
               <div className="flex flex-col">
                 <span className="font-medium text-gray-900">
                   {user?.name || <Skeleton />}
@@ -116,7 +120,11 @@ const Profile: NextPage = () => {
         {data?.reviews.map((review) => (
           <div className="mt-12" key={review.id}>
             <div className="flex items-center space-x-4">
-              <div className="h-12 w-12 rounded-full bg-slate-400" />
+              <img
+                src={review.createdBy.avatar}
+                className="h-12 w-12 rounded-full"
+                alt="Profile Picture of reviewer"
+              />
               <div>
                 <h4 className="text-sm font-bold text-gray-900">
                   {review.createdBy.name}

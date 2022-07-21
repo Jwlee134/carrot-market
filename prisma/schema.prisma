@@ -17,7 +17,7 @@ model User {
   name            String
   phone           String?         @unique
   email           String?         @unique
-  avatar          String?
+  avatar          String?         @default("https://nomadcoffee-jw.s3.ap-northeast-2.amazonaws.com/avatars/1646290008674-Jwlee134-avatar.jpeg")
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   tokens          Token[]
