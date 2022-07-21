@@ -40,13 +40,20 @@ const ProductDetail: NextPage = () => {
 
   return (
     <Layout canGoBack>
-      <div className="px-4 py-10">
+      <div className="relative pt-[75%]">
+        {product?.image ? (
+          <Image
+            src={product.image}
+            layout="fill"
+            objectFit="cover"
+            alt="Product Image"
+          />
+        ) : (
+          <div className="h-full bg-slate-300" />
+        )}
+      </div>
+      <div className="px-4 pb-10">
         <div className="mb-8">
-          {product?.image ? (
-            <img src={product?.image} />
-          ) : (
-            <div className="h-96 bg-slate-300" />
-          )}
           <div className="flex items-center space-x-3 border-t border-b py-3 leading-none">
             {product?.user.avatar ? (
               <Image
